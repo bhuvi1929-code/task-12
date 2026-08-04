@@ -1,0 +1,147 @@
+.card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1.1rem;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.title::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.description {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin-left: 1rem;
+}
+
+.body {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ---------- Loading state ---------- */
+.loadingWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--bg-tertiary);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: chartSpin 0.8s linear infinite;
+}
+
+@keyframes chartSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingText {
+  font-size: 0.85rem;
+}
+
+/* ---------- Empty / error states ---------- */
+.messageWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  gap: 0.6rem;
+  padding: 0 1rem;
+}
+
+.messageIcon {
+  color: var(--text-tertiary);
+}
+
+.messageIcon[data-variant='error'] {
+  color: var(--danger-color);
+}
+
+.messageTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.messageDesc {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  max-width: 320px;
+}
+
+.retryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+  padding: 0.5rem 1.25rem;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.retryButton:hover {
+  background-color: var(--primary-hover);
+}
+
+.retryButton:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* ---------- Responsive heights ---------- */
+@media (max-width: 767px) {
+  .card {
+    padding: 1.1rem;
+  }
+}
