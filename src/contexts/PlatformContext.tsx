@@ -129,7 +129,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
   });
 
   // Generate deterministic attendance records from top 50 employees
-  const [attendance] = useState<AttendanceRecord[]>(() => {
+  const [attendance, setAttendance] = useState<AttendanceRecord[]>(() => {
     const statuses: Array<'Present' | 'Absent' | 'Late' | 'Half Day' | 'On Leave'> = 
       ['Present', 'Present', 'Present', 'Present', 'Late', 'Absent', 'On Leave'];
     return defaultEmployees.slice(0, 80).map((emp, i) => ({
@@ -177,6 +177,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
     };
     setAuditLogs(prev => [newLog, ...prev.slice(0, 99)]);
   };
+
 
   const addEmployee = (emp: Omit<Employee, 'id'>) => {
     const newEmp: Employee = {

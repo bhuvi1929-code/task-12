@@ -1,29 +1,126 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { UserRole } from '../types';
-import { checkRoutePermission } from '../config/permissions';
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import type { UserRole } from "../types";
+import { checkRoutePermission } from "../config/permissions";
 
 interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
 }
 
-export function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
-  const { user, isAuthenticated } = useAuth();
+export function ProtectedRoute({
+  allowedRoles,
+}: ProtectedRouteProps) {
+  const {
+    user,
+    isAuthenticated,
+    expireSession,
+  } = useAuth();
+
   const location = useLocation();
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  /* ===========================================
+      1. User Not Logged In
+  =========================================== */
+
+  if (!isAuthenticated || !user) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: location }}
+      />
+    );
   }
 
-  // 1. Check explicit prop role permissions if provided on the route
-  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/unauthorized" replace />;
+  /* ===========================================
+      2. Invalid Token
+  =========================================== */
+
+  if (!user.token) {
+    expireSession();
+
+    return null;
   }
 
-  // 2. Check centralized path-prefix permissions (protects against direct browser URL entry)
-  if (!checkRoutePermission(location.pathname, user?.role)) {
-    return <Navigate to="/unauthorized" replace />;
+  /* ===========================================
+      3. Route Role Validation
+  =========================================== */
+
+  if (
+    allowedRoles &&
+    !allowedRoles.includes(user.role)
+  ) {
+    addAuditLog(
+      user.name,
+      user.role,
+      "ACCESS DENIED",
+      location.pathname
+    );
+
+    return (
+      <Navigate
+        to="/unauthorized"
+        replace
+      />
+    );
   }
+
+  /* ===========================================
+      4. URL Permission Validation
+  =========================================== */
+
+  if (
+    !checkRoutePermission(
+      location.pathname,
+      user.role
+    )
+  ) {
+    addAuditLog(
+      user.name,
+      user.role,
+      "URL BLOCKED",
+      location.pathname
+    );
+
+    return (
+      <Navigate
+        to="/unauthorized"
+        replace
+      />
+    );
+  }
+
+  /* ===========================================
+      5. Allow Route
+  =========================================== */
 
   return <Outlet />;
+}
+
+/* ===============================================
+      Audit Logger
+================================================ */
+
+function addAuditLog(
+  username: string,
+  role: UserRole,
+  action: string,
+  path: string
+) {
+  const history = JSON.parse(
+    localStorage.getItem("auditLogs") || "[]"
+  );
+
+  history.unshift({
+    username,
+    role,
+    action,
+    path,
+    date: new Date().toLocaleString(),
+  });
+
+  localStorage.setItem(
+    "auditLogs",
+    JSON.stringify(history)
+  );
 }

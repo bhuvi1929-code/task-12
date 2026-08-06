@@ -37,21 +37,38 @@ export default function Login() {
     let pErr = "";
     let rErr = "";
 
-    if (!selectedRole) {
-      rErr = "Please select a role above (Admin, HR, or Manager).";
-    }
+    const credentials = {
+  Admin: {
+    username: "admin",
+    password: "admin123",
+  },
+  HR: {
+    username: "hr",
+    password: "hr123",
+  },
+  Manager: {
+    username: "manager",
+    password: "manager123",
+  },
+};
 
-    if (!username.trim()) {
-      uErr = "Please enter Username.";
-    } else if (username !== "admin") {
-      uErr = "Invalid Username! Username must be admin.";
-    }
+if (!selectedRole) {
+  rErr = "Please select a role.";
+} else {
+  const userCredential = credentials[selectedRole];
 
-    if (!password.trim()) {
-      pErr = "Please enter Password.";
-    } else if (password !== "admin123") {
-      pErr = "Invalid Password! Password must be admin123.";
-    }
+  if (!username.trim()) {
+    uErr = "Please enter Username.";
+  } else if (username !== userCredential.username) {
+    uErr = `Invalid Username! Use "${userCredential.username}".`;
+  }
+
+  if (!password.trim()) {
+    pErr = "Please enter Password.";
+  } else if (password !== userCredential.password) {
+    pErr = `Invalid Password! Use "${userCredential.password}".`;
+  }
+}
 
     setRoleError(rErr);
     setUsernameError(uErr);

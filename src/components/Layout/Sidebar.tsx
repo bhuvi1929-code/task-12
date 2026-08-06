@@ -154,16 +154,56 @@ export default function Sidebar({ isOpenMobile, onCloseMobile }: SidebarProps) {
             {initials}
           </div>
           <div className={styles.userMeta}>
+            <div
+  style={{
+    fontSize: "11px",
+    color: "#94a3b8",
+    marginTop: "4px",
+  }}
+>
+  Session Active
+</div>
             <div className={styles.userName} style={{ fontWeight: 600 }}>{user?.name ?? "User"}</div>
             <div className={styles.userRole} style={{ fontSize: '0.75rem', opacity: 0.8, textTransform: 'capitalize' }}>
-              {user?.role} {user?.department ? `• ${user.department}` : ''}
+              <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    flexWrap: "wrap",
+    marginTop: "4px",
+  }}
+>
+  <span>{user?.role}</span>
+
+  {user?.department && (
+    <span
+      style={{
+        background: "#0ea5e9",
+        color: "white",
+        padding: "2px 8px",
+        borderRadius: "20px",
+        fontSize: "11px",
+        fontWeight: 700,
+      }}
+    >
+      {user.department}
+    </span>
+  )}
+</div>
             </div>
           </div>
         </div>
         <button
           onClick={() => {
             addAuditLog("User Authentication Logout", "Session Terminated", "Success", user?.name ?? "User", user?.role ?? "System");
-            logout();
+            const ok = window.confirm(
+  "Are you sure you want to logout?"
+);
+
+if (!ok) return;
+
+logout();
           }}
           className={styles.logoutBtn}
           title="Sign out of HCM Platform"
