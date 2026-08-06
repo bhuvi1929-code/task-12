@@ -27,6 +27,7 @@ import { computeKpis } from '../utils/kpiCalculations';
 import { departmentChartData, locationChartData, workforceTrendData } from '../utils/chartData';
 import { exportToCsv } from '../utils/csvExport';
 
+
 // Types & Styles
 import type { DashboardFilters, KpiDefinition, Employee } from '../types';
 import pageStyles from '../styles/pages.module.css';
@@ -124,8 +125,10 @@ function DashboardView({
 
   // 4. Handlers
   const handleExport = () => {
-    exportToCsv(filteredEmployees, `workforce_export_${new Date().getTime()}.csv`);
-  };
+  const fileName = `workforce_export_${new Date().toISOString().slice(0, 10)}.csv`;
+
+  exportToCsv(filteredEmployees, fileName);
+};
 
   return (
     <div style={{ flex: 1, minWidth: '380px' }}>

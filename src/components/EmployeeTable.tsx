@@ -82,17 +82,13 @@ export default function EmployeeTable({
   };
 
   const handleExport = () => {
-    if (!user) return;
-
-    exportEmployeesToCsv(
-      employees,
-      user.role,
-      user.department,
-      `employees-filtered-${new Date()
-        .toISOString()
-        .slice(0, 10)}.csv`
-    );
-  };
+  exportEmployeesToCsv(
+    employees,
+    `employees-filtered-${new Date()
+      .toISOString()
+      .slice(0, 10)}.csv`
+  );
+};
 
   return (
     <div>
